@@ -1,0 +1,6 @@
+backend/myapi/db.sqlite3
+backend/myapi/*.log
+backend/myapi/*.pot
+backend/myapi/*.pyc
+backend/myapi/*/__pycache__
+
