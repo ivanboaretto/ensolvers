@@ -5,4 +5,5 @@
 ### node: 12.22.5
 ### corsheaders: 3.10.0
 ### djangorestframework: 3.12.4
-### django 3.2.9
+### django: 3.2.9
+### npm: 7.5.2
