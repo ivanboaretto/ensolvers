@@ -62,15 +62,13 @@ export default {
 
     addToDo(){
       const postData = {description: this.add_description, completed: false};
-      axios
-        .post("http://localhost:8000/todo", postData)
-        .then(this.getToDoList())
+      axios.post("http://localhost:8000/todo", postData)
+        .then(response => (this.getToDoList()))
     },
 
     deleteToDo(todo){
-      axios
-        .delete("http://localhost:8000/todo/"+todo.id)
-        .then(this.getToDoList())
+      axios.delete("http://localhost:8000/todo/"+todo.id)
+        .then(response => (this.getToDoList()))
     },
 
     openModalToUpdate(todo){
@@ -80,17 +78,14 @@ export default {
 
     updateToDoWith(){
       const putData = {description: this.update_description, completed: this.todo_to_update.completed}
-      axios
-        .put("http://localhost:8000/todo/"+this.todo_to_update.id,putData)
-        .then(this.getToDoList())
+      axios.put("http://localhost:8000/todo/"+this.todo_to_update.id,putData)
+        .then(responze =>(this.getToDoList()))
       this.show_modal = false;
     },
 
     updateCheckFor(todo){
       const putData = {description: todo.description, completed: !todo.completed}
-      axios
-        .put("http://localhost:8000/todo/"+todo.id,putData)
-        .then(this.getToDoList())
+      axios.put("http://localhost:8000/todo/"+todo.id,putData)
       this.show_modal = false;
     }
   }
