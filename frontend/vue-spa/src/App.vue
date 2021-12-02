@@ -1,5 +1,5 @@
 <template>
-  <div id='app'>
+  <div id='app' class='modal-vue'>
     <header>
       <h1>Tasks</h1>
     </header>
@@ -8,10 +8,21 @@
         <div v-for="todo in todo_list">
           <input type="checkbox" id="checkbox">
           <span>{{todo.description}}</span>
-          <button v-on:click="updateToDoWith(todo)">Update</button>
+          <button v-on:click="openModalToUpdate(todo)">Update</button>
           <button v-on:click="deleteToDo(todo)">Delete</button>
         </div>
-        <input v-model="description" placeholder="Input TODO" required/>
+
+        <div class="overlay" v-if="show_modal" @click="show_modal = false"></div>
+        <div class="modal" v-if="show_modal">
+          <h3>Update ToDo</h3>
+          <input v-model="update_description" placeholder="Input description" required/>
+          <span>
+            <button class="close" @click="show_modal = false">Close</button>
+            <button class="close" @click="updateToDoWith()">Update</button>
+          </span>
+        </div>
+
+        <input v-model="add_description" placeholder="Input description" required/>
         <button v-on:click="addToDo()">Add</button>
       </div>
     </main>
@@ -25,8 +36,11 @@ export default {
   data() {
     return {
       todo_list: null,
+      show_modal: false,
       endpoint: 'http://localhost:8000/todo_list',
-      description: ''
+      add_description: '',
+      update_description: '',
+      todo_to_update: null
     }
   },
 
@@ -47,7 +61,7 @@ export default {
     },
 
     addToDo(){
-      const postData = {description: this.description, completed: false};
+      const postData = {description: this.add_description, completed: false};
       axios
         .post("http://localhost:8000/todo", postData)
         .then(this.getToDoList())
@@ -59,8 +73,17 @@ export default {
         .then(this.getToDoList())
     },
 
-    updateToDoWith(todo){
-      
+    openModalToUpdate(todo){
+      this.todo_to_update = todo;
+      this.show_modal = true;
+    },
+
+    updateToDoWith(){
+      const putData = {description: this.update_description, completed: this.todo_to_update.completed}
+      axios
+        .put("http://localhost:8000/todo/"+this.todo_to_update.id,putData)
+        .then(this.getToDoList())
+      this.show_modal = false;
     }
   }
 }
@@ -92,5 +115,31 @@ li {
 
 a {
   color: #42b983;
+}
+
+/* Modal Style */
+.modal-vue .overlay {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.modal-vue .modal {
+  position: relative;
+  width: 300px;
+  z-index: 9999;
+  margin: 0 auto;
+  padding: 20px 30px;
+  background-color: whitesmoke;
+}
+
+.modal-vue .close{
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>
