@@ -6,7 +6,7 @@
     <main>
       <div>
         <div v-for="todo in todo_list">
-          <input type="checkbox" id="checkbox">
+          <input v-on:click="updateCheckFor(todo)" type="checkbox" id="checkbox" v-bind:checked="todo.completed">
           <span>{{todo.description}}</span>
           <button v-on:click="openModalToUpdate(todo)">Update</button>
           <button v-on:click="deleteToDo(todo)">Delete</button>
@@ -82,6 +82,14 @@ export default {
       const putData = {description: this.update_description, completed: this.todo_to_update.completed}
       axios
         .put("http://localhost:8000/todo/"+this.todo_to_update.id,putData)
+        .then(this.getToDoList())
+      this.show_modal = false;
+    },
+
+    updateCheckFor(todo){
+      const putData = {description: todo.description, completed: !todo.completed}
+      axios
+        .put("http://localhost:8000/todo/"+todo.id,putData)
         .then(this.getToDoList())
       this.show_modal = false;
     }
